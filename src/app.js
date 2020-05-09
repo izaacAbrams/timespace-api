@@ -3,7 +3,7 @@ const express = require("express");
 const morgan = require("morgan");
 const cors = require("cors");
 const helmet = require("helmet");
-const { NODE_ENV } = require("./config");
+const { NODE_ENV, API_TOKEN } = require("./config");
 
 const app = express();
 
@@ -13,8 +13,8 @@ app.use(morgan(morganOption));
 app.use(helmet());
 app.use(cors());
 
-app.get("/", (req, res) => {
-  res.send("Hello, world!");
+app.get("/api/*", (req, res) => {
+  res.send({ ok: true });
 });
 
 app.use(function errorHandler(error, req, res, next) {
