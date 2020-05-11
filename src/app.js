@@ -4,6 +4,7 @@ const morgan = require("morgan");
 const cors = require("cors");
 const helmet = require("helmet");
 const logger = require("./logger");
+const schedulesRouter = require("./schedules/schedules-router");
 const { NODE_ENV, CLIENT_ORIGIN } = require("./config");
 
 const app = express();
@@ -29,10 +30,10 @@ app.use(function validateBearerToken(req, res, next) {
   next();
 });
 
-app.get("/api/*", (req, res) => {
+app.get("/api/", (req, res) => {
   res.send({ ok: true });
 });
-
+app.use("/api/schedules", schedulesRouter);
 app.use(function errorHandler(error, req, res, next) {
   let response;
   if (NODE_ENV === "production") {
