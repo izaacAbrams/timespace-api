@@ -6,7 +6,7 @@ function makeSchedulesArray() {
       schedule_url: "sallys-salon-spa",
       time_open: "0800",
       time_closed: "1700",
-      services: [
+      services: JSON.stringify([
         {
           name: "Nails",
           duration: "50",
@@ -23,7 +23,7 @@ function makeSchedulesArray() {
           name: "Mud Bath",
           duration: "60",
         },
-      ],
+      ]),
     },
     {
       id: "2",
@@ -31,7 +31,7 @@ function makeSchedulesArray() {
       schedule_url: "mikes-pokemon-training",
       time_open: "0600",
       time_closed: "2200",
-      services: [
+      services: JSON.stringify([
         {
           name: "Train",
           duration: "60",
@@ -44,7 +44,7 @@ function makeSchedulesArray() {
           name: "Lose for money",
           duration: "10",
         },
-      ],
+      ]),
     },
     {
       id: "3",
@@ -52,7 +52,7 @@ function makeSchedulesArray() {
       schedule_url: "music-to-study-to",
       time_open: "0700",
       time_closed: "2000",
-      services: [
+      services: JSON.stringify([
         {
           name: "Jazz",
           duration: "100",
@@ -65,7 +65,7 @@ function makeSchedulesArray() {
           name: "Hip-Hop",
           duration: "30",
         },
-      ],
+      ]),
     },
   ];
 }
@@ -77,12 +77,12 @@ function makeMaliciousThing() {
     schedule: 'Naughty naughty very naughty <script>alert("xss");</script>',
     time_open: "0900",
     time_closed: "1700",
-    services: [
+    services: JSON.stringify([
       {
         name: "Malicious <bold>Schedule</bold>",
         duration: "<script>console.log('xss')</script>60",
       },
-    ],
+    ]),
   };
   const expectedThing = {
     id: 911,

@@ -29,7 +29,7 @@ INSERT INTO timespace_schedules (schedule, schedule_url, time_open, time_closed,
   'mikes-pokemon-training',
   '0600',
   '2200',
-  '[
+    '[
       {
         "name": "Train",
         "duration": "60"

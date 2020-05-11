@@ -17,9 +17,10 @@ const serializeSchedule = (schedule) => ({
 
 function serializeServices(services) {
   let serializeServices = [];
-  if (services.length === 1) {
-    const name = xss(services[0].name);
-    const duration = xss(services[0].duration);
+  console.log(services);
+  if (services.length === undefined) {
+    const name = xss(services.name);
+    const duration = xss(services.duration);
     serializeServices.push({
       name,
       duration,
@@ -31,7 +32,7 @@ function serializeServices(services) {
       serializeServices.push({ name, duration });
     });
   }
-  return serializeServices;
+  return JSON.stringify(serializeServices);
 }
 
 schedulesRouter

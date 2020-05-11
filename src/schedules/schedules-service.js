@@ -4,6 +4,7 @@ const SchedulesService = {
   },
 
   insertSchedule(knex, newSchedule) {
+    console.log(newSchedule);
     return knex
       .insert(newSchedule)
       .into("timespace_schedules")
