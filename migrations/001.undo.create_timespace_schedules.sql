@@ -1,1 +1,1 @@
-DROP TABLE IF EXISTS timespace_schedules;
+DROP TABLE IF EXISTS timespace_schedules CASCADE;

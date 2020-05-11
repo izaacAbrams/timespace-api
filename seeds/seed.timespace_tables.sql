@@ -1,3 +1,10 @@
+BEGIN;
+
+TRUNCATE 
+  timespace_schedules,
+  timespace_appointments
+  RESTART IDENTITY CASCADE;
+
 INSERT INTO timespace_schedules (schedule, schedule_url, time_open, time_closed, services)
   VALUES 
   (
@@ -5,24 +12,10 @@ INSERT INTO timespace_schedules (schedule, schedule_url, time_open, time_closed,
   'sallys-salon-spa',
   '0800',
   '1700',
-    '[
-      {
-        "name": "Nails",
-        "duration": "50"
-      },
-      {
-        "name": "Spa",
-        "duration": "30"
-      },
-      {
-        "name": "Cucumber on Eyes",
-        "duration": "30"
-      },
-      {
-        "name": "Mud Bath",
-        "duration": "60"
-      }
-    ]'
+  '[{"name": "Nails","duration": "50"},
+    {"name": "Spa","duration": "30"},
+    {"name": "Cucumber on Eyes","duration": "30"},
+    {"name": "Mud Bath","duration": "60"}]'
   ),
   (
   'Mike''s Pokemon Training',
@@ -64,3 +57,18 @@ INSERT INTO timespace_schedules (schedule, schedule_url, time_open, time_closed,
       }
     ]'
   );
+
+INSERT INTO timespace_appointments(name, email, schedule, service, appt_date_time) 
+  VALUES 
+  (
+    'Joe Smith', 'joesmith@google.com',  1, 'Nails', '2020-05-08T16:00:00.000Z'
+  ),
+  (
+    'Jane Smith', 'janesmith@microsoft.com', 1, 'Salon', '2020-05-08T14:00:00.000Z'
+  ),
+  (
+    'Izaac A', 'izaaca@izaac.com', 2, 'training', '2020-05-08T18:00:00.000Z'
+  );
+
+
+  COMMIT;
