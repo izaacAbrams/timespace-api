@@ -4,6 +4,7 @@ const xss = require("xss");
 const schedulesRouter = express.Router();
 const path = require("path");
 const jsonParser = express.json();
+const logger = require("../logger");
 
 const serializeSchedule = (schedule) => ({
   id: schedule.id,
@@ -17,7 +18,6 @@ const serializeSchedule = (schedule) => ({
 
 function serializeServices(services) {
   let serializeServices = [];
-  console.log(services);
   if (services.length === undefined) {
     const name = xss(services.name);
     const duration = xss(services.duration);
@@ -92,12 +92,14 @@ schedulesRouter
       })
       .catch(next);
   })
-  .get((req, res, next) => {
+  .get((req, res) => {
     res.json(serializeSchedule(res.schedule));
   })
   .delete((req, res, next) => {
-    SchedulesService.deleteSchedule(req.app.get("db", req.params.schedule_id))
-      .then(() => {
+    const { schedule_id } = req.params;
+    SchedulesService.deleteSchedule(req.app.get("db"), schedule_id)
+      .then((numRowsAffected) => {
+        logger.info(`Schedule with id ${schedule_id} deleted`);
         res.status(204).end();
       })
       .catch(next);
@@ -138,5 +140,24 @@ schedulesRouter
       })
       .catch(next);
   });
+
+async function checkScheduleExists(req, res, next) {
+  try {
+    const schedule = await SchedulesService.getById(
+      req.app.get("db"),
+      req.params.schedule_id
+    );
+
+    if (!schedule)
+      return res.status(400).json({
+        error: { message: `Schedule doesn't exist` },
+      });
+
+    res.schedule = schedule;
+    next();
+  } catch (next) {
+    next(error);
+  }
+}
 
 module.exports = schedulesRouter;

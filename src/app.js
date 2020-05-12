@@ -6,6 +6,7 @@ const helmet = require("helmet");
 const logger = require("./logger");
 const schedulesRouter = require("./schedules/schedules-router");
 const appointmentsRouter = require("./appointments/appointments-router");
+const usersRouter = require("./users/users-router");
 const { NODE_ENV, CLIENT_ORIGIN } = require("./config");
 
 const app = express();
@@ -36,6 +37,7 @@ app.get("/api/", (req, res) => {
 });
 app.use("/api/schedules", schedulesRouter);
 app.use("/api/appointments", appointmentsRouter);
+app.use("/api/users", usersRouter);
 
 app.use(function errorHandler(error, req, res, next) {
   let response;

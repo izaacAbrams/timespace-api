@@ -56,11 +56,12 @@ appointmentsRouter
       .catch(next);
   })
   .get((req, res, next) => {
-    res.json(AppointmentsService.serializeAppointment(res.appointments));
+    res.json(AppointmentsService.serializeAppointment(res.appt));
   })
   .delete((req, res, next) => {
     AppointmentsService.deleteAppointment(
-      req.app.get("db", req.params.appointment_id)
+      req.app.get("db"),
+      req.params.appointment_id
     )
       .then(() => {
         res.status(204).end();
