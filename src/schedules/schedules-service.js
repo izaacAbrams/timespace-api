@@ -1,6 +1,6 @@
 const SchedulesService = {
   getAllSchedules(knex) {
-    return knex.select("*").from("timespace_schedules");
+    return knex.from("timespace_schedules").select("*");
   },
 
   insertSchedule(knex, newSchedule) {
@@ -15,8 +15,12 @@ const SchedulesService = {
     return knex.from("timespace_schedules").select("*").where("id", id).first();
   },
 
+  getByUser(knex, user) {
+    return knex.from("timespace_schedules").select("*").where("user_id", user);
+  },
+
   deleteSchedule(knex, id) {
-    return knex("timespace_schedules").where("id", id).delete();
+    return knex("timespace_schedules").where({ id }).delete();
   },
 
   updateSchedule(knex, id, newScheduleFields) {

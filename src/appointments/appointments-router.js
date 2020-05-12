@@ -98,4 +98,23 @@ appointmentsRouter
       .catch(next);
   });
 
+appointmentsRouter
+  .route("/schedule/:schedule_id")
+  .all((req, res, next) => {
+    AppointmentsService.getBySchedule(req.app.get("db"), req.params.schedule_id)
+      .then((appt) => {
+        if (!appt) {
+          return res.status(404).json({
+            error: { message: `Appointment doesn't exist` },
+          });
+        }
+        res.appt = appt;
+        next();
+      })
+      .catch(next);
+  })
+  .get((req, res) => {
+    res.json(res.appt);
+  });
+
 module.exports = appointmentsRouter;

@@ -45,7 +45,7 @@ INSERT INTO timespace_schedules (schedule, schedule_url, time_open, time_closed,
         "duration": "10"
       }
     ]',
-    '2'
+    '1'
   ),
   (
     'Music to study to',
@@ -66,7 +66,7 @@ INSERT INTO timespace_schedules (schedule, schedule_url, time_open, time_closed,
         "duration": "30"
       }
     ]',
-    '3'
+    '2'
   );
 
 INSERT INTO timespace_appointments(name, email, schedule, service, appt_date_time) 

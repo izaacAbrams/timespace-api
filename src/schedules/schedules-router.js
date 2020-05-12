@@ -14,6 +14,7 @@ const serializeSchedule = (schedule) => ({
   time_closed: xss(schedule.time_closed),
   services: serializeServices(schedule.services),
   date_created: schedule.date_created,
+  user_id: schedule.user_id,
 });
 
 function serializeServices(services) {
@@ -141,23 +142,23 @@ schedulesRouter
       .catch(next);
   });
 
-async function checkScheduleExists(req, res, next) {
-  try {
-    const schedule = await SchedulesService.getById(
-      req.app.get("db"),
-      req.params.schedule_id
-    );
-
-    if (!schedule)
-      return res.status(400).json({
-        error: { message: `Schedule doesn't exist` },
-      });
-
-    res.schedule = schedule;
-    next();
-  } catch (next) {
-    next(error);
-  }
-}
+schedulesRouter
+  .route("/user/:user")
+  .all((req, res, next) => {
+    SchedulesService.getByUser(req.app.get("db"), req.params.user)
+      .then((schedule) => {
+        if (!schedule) {
+          return res.status(404).json({
+            error: { message: `Schedule doesn't exist` },
+          });
+        }
+        res.schedule = schedule;
+        next();
+      })
+      .catch(next);
+  })
+  .get((req, res) => {
+    res.json(res.schedule);
+  });
 
 module.exports = schedulesRouter;

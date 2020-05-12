@@ -21,6 +21,13 @@ const AppointmentsService = {
       .first();
   },
 
+  getBySchedule(knex, schedule) {
+    return knex
+      .from("timespace_appointments")
+      .select("*")
+      .where("schedule", schedule);
+  },
+
   deleteAppointment(knex, id) {
     return knex("timespace_appointments").where({ id }).delete();
   },
