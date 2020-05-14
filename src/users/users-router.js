@@ -24,7 +24,6 @@ usersRouter.post("/", jsonParser, (req, res, next) => {
         const newUser = {
           name,
           password: hashedPassword,
-          name,
           email,
         };
 

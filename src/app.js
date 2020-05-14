@@ -7,7 +7,7 @@ const logger = require("./logger");
 const schedulesRouter = require("./schedules/schedules-router");
 const appointmentsRouter = require("./appointments/appointments-router");
 const usersRouter = require("./users/users-router");
-const { NODE_ENV, CLIENT_ORIGIN } = require("./config");
+const { NODE_ENV } = require("./config");
 
 const app = express();
 
@@ -15,11 +15,7 @@ const morganOption = NODE_ENV === "production" ? "tiny" : "common";
 
 app.use(morgan(morganOption));
 app.use(helmet());
-app.use(
-  cors({
-    origin: CLIENT_ORIGIN,
-  })
-);
+app.use(cors());
 
 app.use(function validateBearerToken(req, res, next) {
   const apiToken = process.env.API_TOKEN;
