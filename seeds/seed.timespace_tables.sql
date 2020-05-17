@@ -10,7 +10,7 @@ INSERT INTO timespace_users (name, email, password)
   VALUES
     ('Izaac Abrams', 'izaac@izaac.com', 'seedpassword'),
     ('Test One', 'test@test.com', 'test'),
-    ('Demo', 'demo@account.com', 'demopassword');
+    ('Demo', 'demo@account.com', '$2b$12$PWnPB5HBoz3jN7wH.f4z4eHGXU5sRnJpNVs6inJKkF6h4sl3ipSHi');
 
 
 INSERT INTO timespace_schedules (schedule, schedule_url, time_open, time_closed, services, user_id)
@@ -72,13 +72,13 @@ INSERT INTO timespace_schedules (schedule, schedule_url, time_open, time_closed,
 INSERT INTO timespace_appointments(name, email, schedule, service, appt_date_time) 
   VALUES 
   (
-    'Joe Smith', 'joesmith@google.com',  1, 'Nails', 'moment("1100", "HHmm).format()'
+    'Joe Smith', 'joesmith@google.com',  1, 'Nails', '2020-05-08T16:00:00.000Z'
   ),
   (
-    'Jane Smith', 'janesmith@microsoft.com', 1, 'Salon', 'moment("1700", "HHmm).format()'
+    'Jane Smith', 'janesmith@microsoft.com', 1, 'Salon', '2020-05-08T14:00:00.000Z'
   ),
   (
-    'Izaac A', 'izaaca@izaac.com', 2, 'training', 'moment("0900", "HHmm).format()'
+    'Izaac A', 'izaaca@izaac.com', 2, 'training', '2020-05-08T18:00:00.000Z'
   );
 
   COMMIT;

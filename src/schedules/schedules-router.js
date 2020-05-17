@@ -3,6 +3,7 @@ const SchedulesService = require("./schedules-service");
 const xss = require("xss");
 const schedulesRouter = express.Router();
 const path = require("path");
+const { requireAuth } = require("../middleware/jwt-auth");
 const jsonParser = express.json();
 const logger = require("../logger");
 
@@ -38,14 +39,14 @@ function serializeServices(services) {
 
 schedulesRouter
   .route("/")
-  .get((req, res, next) => {
+  .get(requireAuth, (req, res, next) => {
     SchedulesService.getAllSchedules(req.app.get("db"))
       .then((schedules) => {
         res.json(schedules.map(serializeSchedule));
       })
       .catch(next);
   })
-  .post(jsonParser, (req, res, next) => {
+  .post(requireAuth, jsonParser, (req, res, next) => {
     const {
       schedule,
       time_open,
@@ -80,7 +81,7 @@ schedulesRouter
 
 schedulesRouter
   .route("/:schedule_id")
-  .all((req, res, next) => {
+  .all(requireAuth, (req, res, next) => {
     SchedulesService.getById(req.app.get("db"), req.params.schedule_id)
       .then((schedule) => {
         if (!schedule) {
@@ -144,7 +145,7 @@ schedulesRouter
 
 schedulesRouter
   .route("/user/:user")
-  .all((req, res, next) => {
+  .all(requireAuth, (req, res, next) => {
     SchedulesService.getByUser(req.app.get("db"), req.params.user)
       .then((schedule) => {
         if (!schedule) {

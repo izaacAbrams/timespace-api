@@ -7,6 +7,7 @@ const logger = require("./logger");
 const schedulesRouter = require("./schedules/schedules-router");
 const appointmentsRouter = require("./appointments/appointments-router");
 const usersRouter = require("./users/users-router");
+const authRouter = require("./auth/auth-router");
 const { NODE_ENV } = require("./config");
 
 const app = express();
@@ -17,22 +18,20 @@ app.use(morgan(morganOption));
 app.use(helmet());
 app.use(cors());
 
-app.use(function validateBearerToken(req, res, next) {
-  const apiToken = process.env.API_TOKEN;
-  const authToken = req.get("Authorization");
+// app.use(function validateBearerToken(req, res, next) {
+//   const apiToken = process.env.API_TOKEN;
+//   const authToken = req.get("Authorization");
 
-  if (!authToken || authToken.split(" ")[1] !== apiToken) {
-    logger.error(`Unauthorized request to path: ${req.path}`);
-    return res.status(401).json({ error: "Unauthorized request" });
-  }
-  next();
-});
+//   if (!authToken || authToken.split(" ")[1] !== apiToken) {
+//     logger.error(`Unauthorized request to path: ${req.path}`);
+//     return res.status(401).json({ error: "Unauthorized request" });
+//   }
+//   next();
+// });
 
-app.get("/api/", (req, res) => {
-  res.send({ ok: true });
-});
 app.use("/api/schedules", schedulesRouter);
 app.use("/api/appointments", appointmentsRouter);
+app.use("/api/auth", authRouter);
 app.use("/api/users", usersRouter);
 
 app.use(function errorHandler(error, req, res, next) {

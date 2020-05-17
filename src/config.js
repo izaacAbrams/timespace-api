@@ -5,4 +5,5 @@ module.exports = {
   CLIENT_ORIGIN: process.env.CLIENT_ORIGIN,
   DATABASE_URL:
     process.env.DATABASE_URL || "postgresql://postgres@localhost/timespace",
+  JWT_SECRET: process.env.JWT_SECRET || "change-this-secret",
 };

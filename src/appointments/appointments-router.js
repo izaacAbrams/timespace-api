@@ -1,11 +1,13 @@
 const express = require("express");
 const AppointmentsService = require("./appointments-service");
 const appointmentsRouter = express.Router();
+const { requireAuth } = require("../middleware/jwt-auth");
 const path = require("path");
 const jsonParser = express.json();
 
 appointmentsRouter
   .route("/")
+  .all(requireAuth)
   .get((req, res, next) => {
     AppointmentsService.getAllAppointments(req.app.get("db"))
       .then((appts) => {
@@ -42,7 +44,7 @@ appointmentsRouter
 
 appointmentsRouter
   .route("/:appointment_id")
-  .all((req, res, next) => {
+  .all(requireAuth, (req, res, next) => {
     AppointmentsService.getById(req.app.get("db"), req.params.appointment_id)
       .then((appt) => {
         if (!appt) {
@@ -69,15 +71,14 @@ appointmentsRouter
       .catch(next);
   })
   .patch(jsonParser, (req, res, next) => {
-    const { name, email, schedule, service, appt_date_time } = req.body;
+    const { name, schedule, service, appt_date_time } = req.body;
+
     const apptToUpdate = {
       name,
-      email,
       schedule,
       service,
       appt_date_time,
     };
-
     const numberOfValues = Object.values(apptToUpdate).filter(Boolean).length;
 
     if (numberOfValues === 0) {
@@ -100,12 +101,12 @@ appointmentsRouter
 
 appointmentsRouter
   .route("/schedule/:schedule_id")
-  .all((req, res, next) => {
+  .all(requireAuth, (req, res, next) => {
     AppointmentsService.getBySchedule(req.app.get("db"), req.params.schedule_id)
       .then((appt) => {
         if (!appt) {
           return res.status(404).json({
-            error: { message: `Appointment doesn't exist` },
+            error: { message: `Schedule doesn't exist` },
           });
         }
         res.appt = appt;
