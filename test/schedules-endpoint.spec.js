@@ -5,6 +5,8 @@ const helpers = require("./test-helpers");
 describe("Schedules Endpoints", function () {
   let db;
 
+  const { testUsers, testSchedules } = helpers.makeTimeSpaceFixtures();
+
   before("make knex instance", () => {
     db = knex({
       client: "pg",
@@ -17,11 +19,40 @@ describe("Schedules Endpoints", function () {
   before("cleanup", () => helpers.cleanTables(db));
   afterEach("cleanup", () => helpers.cleanTables(db));
 
+  describe(`GET /api/schedules`, () => {
+    context(`Given no schedules`, () => {
+      before("insert users", () => helpers.seedUsers(db, testUsers));
+
+      it(`responds with 200 and empty list`, () => {
+        return supertest(app)
+          .get("/api/schedules")
+          .set("Authorization", helpers.makeAuthHeader(testUsers[0]))
+          .expect(200, []);
+      });
+    });
+
+    context("Given there are schedules", () => {
+      beforeEach("insert schedules", () =>
+        helpers.seedSchedules(db, testSchedules)
+      );
+      before("insert users", () => helpers.seedUsers(db, testUsers));
+
+      it(`responds with 200 and all schedules`, () => {
+        const expectedSchedules = testSchedules.map((schedule) =>
+          helpers.makeExpectedSchedule(schedule)
+        );
+        return supertest(app)
+          .get("/api/schedules")
+          .set("Authorization", helpers.makeAuthHeader(testUsers[0]))
+          .expect(200, expectedSchedules);
+      });
+    });
+  });
+
   describe("POST /api/schedules", () => {
-    beforeEach("insert schedules", () => helpers.makeSchedulesArray());
+    before("insert users", () => helpers.seedUsers(db, testUsers));
 
     it(`creates a schedule, responsing with a 201 and new schedule`, function () {
-      this.retries(3);
       const testSchedule = {
         schedule: "Test new schedule",
         schedule_url: "test-new-schedule",
@@ -45,32 +76,102 @@ describe("Schedules Endpoints", function () {
 
       return supertest(app)
         .post("/api/schedules/")
-        .set("Authorization", "Bearer fd78e65a-123c-4521-bdd2-d286eb1b8b6d")
+        .set("Authorization", helpers.makeAuthHeader(testUsers[0]))
         .send(testSchedule)
         .expect(201)
         .expect((res) => {
-          console.log(res.body);
           expect(res.body).to.have.property("id");
           expect(res.body.schedule).to.eql(testSchedule.schedule);
           expect(res.body.time_open).to.eql(testSchedule.time_open);
           expect(res.body.time_closed).to.eql(testSchedule.time_closed);
-          expect(res.body.services).to.deep.eql(testSchedule.services);
+          expect(res.body.services).to.eql(testSchedule.services);
         });
-      // .expect((res) =>
-      //   db
-      //     .from("timespace_schedules")
-      //     // .set("Authorization", "Bearer fd78e65a-123c-4521-bdd2-d286eb1b8b6d")
-      //     .select("*")
-      //     .where({ id: res.body.id })
-      //     .first()
-      //     .then((row) => {
-      //       expect(row.body).to.have.property("id");
-      //       expect(row.body.schedule).to.eql(testSchedule.schedule);
-      //       expect(row.body.time_open).to.eql(testSchedule.time_open);
-      //       expect(row.body.time_closed).to.eql(testSchedule.time_closed);
-      //       expect(row.body.services).to.deep.eql(testSchedule.services);
-      //     })
-      // );
+    });
+  });
+
+  describe("GET /api/schedules/:schedule_id", () => {
+    context("Given no schedules", () => {
+      beforeEach(() => helpers.seedSchedules(db, testSchedules));
+      before("insert users", () => helpers.seedUsers(db, testUsers));
+
+      it(`responds with 404`, () => {
+        const fakeSchedule = 11111;
+        return supertest(app)
+          .get(`/api/schedules/${fakeSchedule}`)
+          .set("Authorization", helpers.makeAuthHeader(testUsers[0]))
+          .expect(404, { error: { message: `Schedule doesn't exist` } });
+      });
+    });
+
+    context("Given there are schedules in db", () => {
+      beforeEach(() => helpers.seedSchedules(db, testSchedules));
+      before("insert users", () => helpers.seedUsers(db, testUsers));
+
+      it(`responds with 200 and specified schedule`, () => {
+        const scheduleId = 1;
+        const expectedSchedule = {
+          id: 1,
+          schedule: "Sally's Salon & Spa",
+          schedule_url: "sallys-salon-spa",
+          time_open: "0800",
+          time_closed: "1700",
+          services: JSON.stringify([
+            {
+              name: "Nails",
+              duration: "50",
+            },
+            {
+              name: "Spa",
+              duration: "30",
+            },
+            {
+              name: "Cucumber on Eyes",
+              duration: "30",
+            },
+            {
+              name: "Mud Bath",
+              duration: "60",
+            },
+          ]),
+          date_created: new Date("2029-01-22T16:28:32.615Z").toISOString(),
+          user_id: null,
+        };
+
+        return supertest(app)
+          .get(`/api/schedules/${scheduleId}`)
+          .set("Authorization", helpers.makeAuthHeader(testUsers[0]))
+          .expect(200, expectedSchedule);
+      });
+    });
+
+    context(`Given an XSS schedule attack`, () => {
+      before("insert users", () => helpers.seedUsers(db, testUsers));
+
+      const testUser = {
+        id: 10,
+        name: "Test Name",
+        email: "test@email.com",
+        password: "testpass",
+        date_created: new Date("2029-01-22T16:28:32.615Z"),
+      };
+      const {
+        maliciousSchedule,
+        expectedSchedule,
+      } = helpers.makeMaliciousSchedule(testUser);
+
+      beforeEach("insert malicious schedule", () => {
+        return helpers.seedMaliciousSchedule(db, testUser, maliciousSchedule);
+      });
+      it("removes XSS attack content", () => {
+        return supertest(app)
+          .get(`/api/schedules/${maliciousSchedule.id}`)
+          .set("Authorization", helpers.makeAuthHeader(testUsers[0]))
+          .expect(200)
+          .expect((res) => {
+            expect(res.body.schedule).to.eql(expectedSchedule.schedule);
+            expect(res.body.services).to.eql(expectedSchedule.services);
+          });
+      });
     });
   });
 });

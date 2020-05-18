@@ -8,8 +8,8 @@ TRUNCATE
 
 INSERT INTO timespace_users (name, email, password)
   VALUES
-    ('Izaac Abrams', 'izaac@izaac.com', 'seedpassword'),
-    ('Test One', 'test@test.com', 'test'),
+    ('Izaac Abrams', 'izaac@izaac.com', '$2a$12$xvPz6h6drBplEe7sXb1I3uMHsL.sIZW0TPaj08..T6H6ngz5gerbC'),
+    ('Test One', 'test@test.com', '$2a$12$y8d/lWQOEDEpVeLTTfn0BupwYDA0j4yF1XzkNsmHP.eINowIKijvm'),
     ('Demo', 'demo@account.com', '$2b$12$PWnPB5HBoz3jN7wH.f4z4eHGXU5sRnJpNVs6inJKkF6h4sl3ipSHi');
 
 

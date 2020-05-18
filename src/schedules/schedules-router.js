@@ -53,6 +53,7 @@ schedulesRouter
       time_closed,
       services,
       schedule_url,
+      user_id,
     } = req.body;
     const newSchedule = {
       schedule,
@@ -60,6 +61,7 @@ schedulesRouter
       time_closed,
       services,
       schedule_url,
+      user_id,
     };
 
     for (const [key, value] of Object.entries(newSchedule)) {
