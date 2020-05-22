@@ -7,7 +7,7 @@ authRouter.post("/login", jsonBodyParser, (req, res, next) => {
   const { email, password } = req.body;
   const loginUser = { email, password };
   for (const [key, value] of Object.entries(loginUser))
-    if (value === null)
+    if (value === null || value === undefined)
       return res.status(400).json({
         error: `Missing '${key}' in request body`,
       });

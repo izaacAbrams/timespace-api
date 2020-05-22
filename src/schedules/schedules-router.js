@@ -144,6 +144,24 @@ schedulesRouter
       })
       .catch(next);
   });
+schedulesRouter
+  .route("/id/:schedule_id")
+  .all((req, res, next) => {
+    SchedulesService.getByUrl(req.app.get("db"), req.params.schedule_id)
+      .then((schedule) => {
+        if (!schedule) {
+          return res.status(404).json({
+            error: { message: `Schedule doesn't exist` },
+          });
+        }
+        res.schedule = schedule;
+        next();
+      })
+      .catch(next);
+  })
+  .get((req, res) => {
+    res.json(res.schedule);
+  });
 
 schedulesRouter
   .route("/user/:user")

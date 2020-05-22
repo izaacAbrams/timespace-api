@@ -7,8 +7,8 @@ const jsonParser = express.json();
 
 appointmentsRouter
   .route("/")
-  .all(requireAuth)
-  .get((req, res, next) => {
+  .all()
+  .get(requireAuth, (req, res, next) => {
     AppointmentsService.getAllAppointments(req.app.get("db"))
       .then((appts) => {
         res.json(AppointmentsService.serializeAppointments(appts));
@@ -103,6 +103,27 @@ appointmentsRouter
   .route("/schedule/:schedule_id")
   .all(requireAuth, (req, res, next) => {
     AppointmentsService.getBySchedule(req.app.get("db"), req.params.schedule_id)
+      .then((appt) => {
+        if (!appt) {
+          return res.status(404).json({
+            error: { message: `Schedule doesn't exist` },
+          });
+        }
+        res.appt = appt;
+        next();
+      })
+      .catch(next);
+  })
+  .get((req, res) => {
+    res.json(res.appt);
+  });
+
+appointmentsRouter
+  .route("/new-appt/:schedule_id")
+  .all((req, res, next) => {
+    AppointmentsService.getByScheduleForNewAppt(
+      req.app.get("db", req.params.schedule_id)
+    )
       .then((appt) => {
         if (!appt) {
           return res.status(404).json({
