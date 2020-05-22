@@ -31,7 +31,7 @@ const AppointmentsService = {
     return knex
       .from("timespace_appointments")
       .column("appt_date_time")
-      .where("schedule", schedule);
+      .where("id", schedule);
   },
   deleteAppointment(knex, id) {
     return knex("timespace_appointments").where({ id }).delete();
