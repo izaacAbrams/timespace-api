@@ -16,8 +16,8 @@ appointmentsRouter
       .catch(next);
   })
   .post(jsonParser, (req, res, next) => {
-    const { name, email, schedule, service, appt_date_time } = req.body;
-    const newAppt = {
+    const { name, email, notes, schedule, service, appt_date_time } = req.body;
+    let newAppt = {
       name,
       email,
       schedule,
@@ -32,6 +32,7 @@ appointmentsRouter
         });
       }
     }
+    newAppt = { ...newAppt, notes };
     AppointmentsService.insertAppointment(req.app.get("db"), newAppt)
       .then((appt) => {
         res
