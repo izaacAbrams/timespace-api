@@ -6,5 +6,6 @@ CREATE TABLE timespace_appointments (
      REFERENCES timespace_schedules(id) ON DELETE CASCADE NOT NULL,
   service TEXT NOT NULL,
   appt_date_time TEXT NOT NULL,
+  notes TEXT,
   date_created TIMESTAMPTZ DEFAULT now() NOT NULL
 );
