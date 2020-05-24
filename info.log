@@ -44,3 +44,5 @@
 {"message":"Unauthorized request to path: /api/","level":"error"}
 {"message":"Unauthorized request to path: /api/auth/login","level":"error"}
 {"message":"Unauthorized request to path: /api/auth/login","level":"error"}
+{"message":"Schedule with id 6 deleted","level":"info"}
+{"message":"Schedule with id 4 deleted","level":"info"}

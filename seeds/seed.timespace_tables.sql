@@ -24,7 +24,7 @@ INSERT INTO timespace_schedules (schedule, schedule_url, time_open, time_closed,
     {"name": "Spa","duration": "30"},
     {"name": "Cucumber on Eyes","duration": "30"},
     {"name": "Mud Bath","duration": "60"}]',
-    '1'
+    '3'
   ),
   (
   'Mike''s Pokemon Training',

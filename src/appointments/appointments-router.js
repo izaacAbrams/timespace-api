@@ -122,7 +122,8 @@ appointmentsRouter
   .route("/new-appt/:schedule_id")
   .all((req, res, next) => {
     AppointmentsService.getByScheduleForNewAppt(
-      req.app.get("db", req.params.schedule_id)
+      req.app.get("db"),
+      req.params.schedule_id
     )
       .then((appt) => {
         if (!appt) {
