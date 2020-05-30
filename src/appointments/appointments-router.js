@@ -5,42 +5,33 @@ const { requireAuth } = require("../middleware/jwt-auth");
 const path = require("path");
 const jsonParser = express.json();
 
-appointmentsRouter
-  .route("/")
-  .get(requireAuth, (req, res, next) => {
-    AppointmentsService.getAllAppointments(req.app.get("db"))
-      .then((appts) => {
-        res.json(AppointmentsService.serializeAppointments(appts));
-      })
-      .catch(next);
-  })
-  .post(jsonParser, (req, res, next) => {
-    const { name, email, notes, schedule, service, appt_date_time } = req.body;
-    let newAppt = {
-      name,
-      email,
-      schedule,
-      service,
-      appt_date_time,
-    };
+appointmentsRouter.route("/").post(jsonParser, (req, res, next) => {
+  const { name, email, notes, schedule, service, appt_date_time } = req.body;
+  let newAppt = {
+    name,
+    email,
+    schedule,
+    service,
+    appt_date_time,
+  };
 
-    for (const [key, value] of Object.entries(newAppt)) {
-      if (value === null) {
-        return res.status(400).json({
-          error: { message: `Missing '${key}' in request body` },
-        });
-      }
+  for (const [key, value] of Object.entries(newAppt)) {
+    if (value === null) {
+      return res.status(400).json({
+        error: { message: `Missing '${key}' in request body` },
+      });
     }
-    newAppt = { ...newAppt, notes };
-    AppointmentsService.insertAppointment(req.app.get("db"), newAppt)
-      .then((appt) => {
-        res
-          .status(201)
-          .location(path.posix.join(req.originalUrl, `/${appt.id}`))
-          .json(AppointmentsService.serializeAppointment(appt));
-      })
-      .catch(next);
-  });
+  }
+  newAppt = { ...newAppt, notes };
+  AppointmentsService.insertAppointment(req.app.get("db"), newAppt)
+    .then((appt) => {
+      res
+        .status(201)
+        .location(path.posix.join(req.originalUrl, `/${appt.id}`))
+        .json(AppointmentsService.serializeAppointment(appt));
+    })
+    .catch(next);
+});
 
 appointmentsRouter
   .route("/:appointment_id")

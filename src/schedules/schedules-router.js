@@ -37,49 +37,40 @@ function serializeServices(services) {
   return JSON.stringify(serializeServices);
 }
 
-schedulesRouter
-  .route("/")
-  .get(requireAuth, (req, res, next) => {
-    SchedulesService.getAllSchedules(req.app.get("db"))
-      .then((schedules) => {
-        res.json(schedules.map(serializeSchedule));
-      })
-      .catch(next);
-  })
-  .post(requireAuth, jsonParser, (req, res, next) => {
-    const {
-      schedule,
-      time_open,
-      time_closed,
-      services,
-      schedule_url,
-      user_id,
-    } = req.body;
-    const newSchedule = {
-      schedule,
-      time_open,
-      time_closed,
-      services,
-      schedule_url,
-      user_id,
-    };
+schedulesRouter.route("/").post(requireAuth, jsonParser, (req, res, next) => {
+  const {
+    schedule,
+    time_open,
+    time_closed,
+    services,
+    schedule_url,
+    user_id,
+  } = req.body;
+  const newSchedule = {
+    schedule,
+    time_open,
+    time_closed,
+    services,
+    schedule_url,
+    user_id,
+  };
 
-    for (const [key, value] of Object.entries(newSchedule)) {
-      if (value === null) {
-        return res.status(400).json({
-          error: { message: `Missing '${key}' in request body` },
-        });
-      }
+  for (const [key, value] of Object.entries(newSchedule)) {
+    if (value === null) {
+      return res.status(400).json({
+        error: { message: `Missing '${key}' in request body` },
+      });
     }
-    SchedulesService.insertSchedule(req.app.get("db"), newSchedule)
-      .then((schedule) => {
-        res
-          .status(201)
-          .location(path.posix.join(req.originalUrl, `/${schedule.id}`))
-          .json(serializeSchedule(schedule));
-      })
-      .catch(next);
-  });
+  }
+  SchedulesService.insertSchedule(req.app.get("db"), newSchedule)
+    .then((schedule) => {
+      res
+        .status(201)
+        .location(path.posix.join(req.originalUrl, `/${schedule.id}`))
+        .json(serializeSchedule(schedule));
+    })
+    .catch(next);
+});
 
 schedulesRouter
   .route("/:schedule_id")
