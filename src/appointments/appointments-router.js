@@ -7,7 +7,6 @@ const jsonParser = express.json();
 
 appointmentsRouter
   .route("/")
-  .all()
   .get(requireAuth, (req, res, next) => {
     AppointmentsService.getAllAppointments(req.app.get("db"))
       .then((appts) => {
