@@ -33,7 +33,7 @@ const SchedulesService = {
   },
 
   deleteSchedule(knex, id) {
-    return knex("timespace_schedules").where({ schedule }).delete();
+    return knex("timespace_schedules").where({ schedule_url }).delete();
   },
 
   updateSchedule(knex, id, newScheduleFields) {
