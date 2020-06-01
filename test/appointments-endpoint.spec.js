@@ -23,39 +23,6 @@ describe("Appointments Endpoints", function () {
   before("cleanup", () => helpers.cleanTables(db));
   afterEach("cleanup", () => helpers.cleanTables(db));
 
-  describe(`GET /api/appointments`, () => {
-    context(`Given no appointments`, () => {
-      before("insert users", () => helpers.seedUsers(db, testUsers));
-
-      it(`responds with 200 and empty list`, () => {
-        return supertest(app)
-          .get("/api/appointments")
-          .set("Authorization", helpers.makeAuthHeader(testUsers[0]))
-          .expect(200, []);
-      });
-    });
-
-    context("Given there are appointments", () => {
-      before("insert users", () => helpers.seedUsers(db, testUsers));
-      beforeEach("insert schedules", () =>
-        helpers.seedSchedules(db, testSchedules)
-      );
-      beforeEach("insert appointments", () =>
-        helpers.seedAppointments(db, testAppointments)
-      );
-
-      it(`responds with 200 and appointments`, () => {
-        const expectedAppts = testAppointments.map((appointment) =>
-          helpers.makeExpectedAppt(appointment)
-        );
-        return supertest(app)
-          .get(`/api/appointments/schedule/1`)
-          .set("Authorization", helpers.makeAuthHeader(testUsers[0]))
-          .expect(200, expectedAppts);
-      });
-    });
-  });
-
   describe("POST /api/appointments", () => {
     before("insert users", () => helpers.seedUsers(db, testUsers));
     beforeEach("insert schedules", () =>

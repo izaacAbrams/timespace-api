@@ -23,18 +23,8 @@ describe("Protected endpoints", function () {
 
   const protectedEndpoints = [
     {
-      name: "GET /api/appointments",
-      path: "/api/appointments/",
-      method: supertest(app).get,
-    },
-    {
       name: "GET /api/appointments/:appointment_id",
       path: "/api/appointments/1",
-      method: supertest(app).get,
-    },
-    {
-      name: "GET /api/schedules",
-      path: "/api/schedules/",
       method: supertest(app).get,
     },
     {

@@ -19,36 +19,6 @@ describe("Schedules Endpoints", function () {
   before("cleanup", () => helpers.cleanTables(db));
   afterEach("cleanup", () => helpers.cleanTables(db));
 
-  describe(`GET /api/schedules`, () => {
-    context(`Given no schedules`, () => {
-      before("insert users", () => helpers.seedUsers(db, testUsers));
-
-      it(`responds with 200 and empty list`, () => {
-        return supertest(app)
-          .get("/api/schedules")
-          .set("Authorization", helpers.makeAuthHeader(testUsers[0]))
-          .expect(200, []);
-      });
-    });
-
-    context("Given there are schedules", () => {
-      beforeEach("insert schedules", () =>
-        helpers.seedSchedules(db, testSchedules)
-      );
-      before("insert users", () => helpers.seedUsers(db, testUsers));
-
-      it(`responds with 200 and all schedules`, () => {
-        const expectedSchedules = testSchedules.map((schedule) =>
-          helpers.makeExpectedSchedule(schedule)
-        );
-        return supertest(app)
-          .get("/api/schedules")
-          .set("Authorization", helpers.makeAuthHeader(testUsers[0]))
-          .expect(200, expectedSchedules);
-      });
-    });
-  });
-
   describe("POST /api/schedules", () => {
     before("insert users", () => helpers.seedUsers(db, testUsers));
 

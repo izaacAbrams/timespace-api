@@ -22,7 +22,9 @@ appointmentsRouter.route("/").post(jsonParser, (req, res, next) => {
       });
     }
   }
+
   newAppt = { ...newAppt, notes };
+
   AppointmentsService.insertAppointment(req.app.get("db"), newAppt)
     .then((appt) => {
       res
