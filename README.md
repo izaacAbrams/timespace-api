@@ -1,26 +1,26 @@
-# Express Boilerplate!
+# Timespace API
 
-This is a boilerplate project used for starting new projects!
+- ### /schedules
 
-## Set up
+  - GET /schedules/user/:user requires authentication. Returns all schedules from user.
+  - POST requires authentication. Posts new schedule to authenticated user.
 
-Complete the following steps to start a new project (NEW-PROJECT-NAME):
+- ### /schedules/:id
 
-1. Clone this repository to your local machine `git clone BOILERPLATE-URL NEW-PROJECTS-NAME`
-2. `cd` into the cloned repository
-3. Make a fresh start of the git history for this project with `rm -rf .git && git init`
-4. Install the node dependencies `npm install`
-5. Move the example Environment file to `.env` that will be ignored by git and read by the express server `mv example.env .env`
-6. Edit the contents of the `package.json` to use NEW-PROJECT-NAME instead of `"name": "express-boilerplate",`
+  - GET requires auth. Returns schedule information for the specified id.
+  - DELETE requires auth. Deletes schedule corresponding to id.
+  - PATCH requires auth. Providing schedule name, time_open, time_closed, or services will update the schedudule.
 
-## Scripts
+- ### /appointments
 
-Start the application `npm start`
+  - GET /appointments/schedule/:schedule_id requires auth. Returns all appointments on the given schedule.
+  - POST takes the appointment object and adds to the database. Returns created appointment.
+  - /:id requires auth
+    - PATCH and DELETE will update and delete, respectively, the given appointment.
+  - /new-appt/:schedule_id GET returns only the times of taken appointments.
 
-Start nodemon for the application `npm run dev`
+- ### /auth
+  - /auth/login POST Given correct login creds, will create JWT and return the created token.
 
-Run the tests `npm test`
-
-## Deploying
-
-When your new project is ready for deployment, add a new Heroku application with `heroku create`. This will make a new git remote called "heroku" and you can then `npm run deploy` which will push to this remote's master branch.
+* ### /users
+  - POST given that the email has not been taken, will create user.
