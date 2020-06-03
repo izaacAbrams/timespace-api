@@ -1,4 +1,8 @@
-# Timespace API
+# Timespace
+
+[Live Link](https://timespace-app.now.sh/)
+
+## API Endpoints:
 
 - ### /schedules
 
@@ -20,7 +24,32 @@
   - /new-appt/:schedule_id GET returns only the times of taken appointments.
 
 - ### /auth
+
   - /auth/login POST Given correct login creds, will create JWT and return the created token.
 
-* ### /users
+- ### /users
   - POST given that the email has not been taken, will create user.
+
+## Summary
+
+TimeSpace is a scheduling app for small businesses. Easily create custom schedules, with services and separate time durations for each service. Your clients can then follow your custom URL to schedule a new appointment for your business. As appointments are made, it will automatically update for your clients so there is no confusion or double-booking.
+
+## Screenshots
+
+<img src="https://github.com/izaacAbrams/timespaces-app/blob/master/src/images/LandingPage.PNG" alt="Login Page" width="500"/>
+
+The landing page, where you can demo creating a new appointment, or sign up.
+
+<img src="https://github.com/izaacAbrams/timespaces-app/blob/master/src/images/LoginPage.PNG" alt="Login Page" width="500"/>
+
+<img src="https://github.com/izaacAbrams/timespaces-app/blob/master/src/images/Appointments.PNG" alt="Login Page" width="500"/>
+
+An example of a schedule with multiple appointments for the day.
+
+<img src="https://github.com/izaacAbrams/timespaces-app/blob/master/src/images/Schedules.PNG" alt="Login Page" width="500"/>
+
+An example of a users view with multiple schedules.
+
+## Tech Used
+
+React, Redux/Router, Momentjs, JWT, node.js, Express, PostgreSQL, Javascript ES6, HTML, CSS
